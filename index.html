@@ -32,7 +32,7 @@
   @media (max-width: 760px) { .entete__menu { display: none; } }
 
   /* ---------- Intro : rebord, papillon, dézoom ---------- */
-  .intro { position: relative; height: 560vh; }
+  .intro { position: relative; height: 700vh; }
   .intro__scene { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: var(--nuit); }
   .intro__flou { position: absolute; inset: -8%; background: url(assets/flou.jpg) center/cover; filter: blur(40px) brightness(.55) saturate(1.2); }
   .intro__cadre { position: absolute; left: 50%; top: 47%; width: var(--c); height: var(--c); margin: calc(var(--c) / -2) 0 0 calc(var(--c) / -2); --c: min(66vh, 88vw, 720px); transform-origin: 49.3% 80.5%; will-change: transform; box-shadow: 0 40px 120px rgba(0, 0, 0, .55); }
@@ -216,7 +216,8 @@
   var cible = 0, p = -1;
   function lire() {
     var r = intro.getBoundingClientRect(), course = r.height - innerHeight;
-    cible = course > 0 ? clamp(-r.top / course) : 0;
+    // L'animation occupe les 77 % du parcours ; le reste est un temps d'arrêt sur la pochette entière.
+    cible = course > 0 ? clamp(-r.top / course / .77) : 0;
   }
   function dessiner(v) {
     // 1. Dézoom : du rebord jusqu'à la pochette entière.
