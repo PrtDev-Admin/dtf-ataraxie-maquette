@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D.T.F · ATARAXIE — maquette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --nuit: #05071c;
+    --nuit-2: #0b1038;
+    --cyan: #8fe9ff;
+    --rose: #ff8fd0;
+    --texte: #e9eeff;
+    --doux: rgba(233, 238, 255, .62);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { background: var(--nuit); }
+  body { font-family: Inter, system-ui, sans-serif; font-weight: 300; color: var(--texte); background: var(--nuit); overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  .titre { font-family: Michroma, sans-serif; letter-spacing: .32em; text-transform: uppercase; font-weight: 400; }
+  .petit { font-size: 11px; letter-spacing: .34em; text-transform: uppercase; }
+
+  /* ---------- En-tête ---------- */
+  .entete { position: fixed; inset: 0 0 auto 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 22px clamp(16px, 4vw, 44px); }
+  .entete__logo { font-family: Michroma, sans-serif; font-size: 18px; letter-spacing: .2em; }
+  .entete__menu { display: flex; gap: 28px; padding: 12px 22px; border-radius: 999px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); }
+  .entete__menu a { opacity: .8; transition: opacity .2s; }
+  .entete__menu a:hover { opacity: 1; }
+  @media (max-width: 760px) { .entete__menu { display: none; } }
+
+  /* ---------- Intro : rebord, papillon, dézoom ---------- */
+  .intro { position: relative; height: 560vh; }
+  .intro__scene { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: var(--nuit); }
+  .intro__flou { position: absolute; inset: -8%; background: url(assets/flou.jpg) center/cover; filter: blur(40px) brightness(.55) saturate(1.2); }
+  .intro__cadre { position: absolute; left: 50%; top: 47%; width: var(--c); height: var(--c); margin: calc(var(--c) / -2) 0 0 calc(var(--c) / -2); --c: min(66vh, 88vw, 720px); transform-origin: 49.3% 80.5%; will-change: transform; box-shadow: 0 40px 120px rgba(0, 0, 0, .55); }
+  .intro__cadre > img, .intro__cadre > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* Halo de la planète et du logo */
+  .intro__halo { position: absolute; left: 50.3%; top: 44.5%; width: 44%; height: 44%; margin: -22% 0 0 -22%; border-radius: 50%; background: radial-gradient(circle, rgba(170, 190, 255, .34), rgba(255, 150, 220, .12) 45%, #0000 68%); mix-blend-mode: screen; animation: pulse 7s ease-in-out infinite; pointer-events: none; }
+  .intro__logo { position: absolute; left: 50.3%; top: 91.6%; width: 12%; height: 5%; margin: -2.5% 0 0 -6%; border-radius: 50%; background: radial-gradient(ellipse, rgba(255, 90, 130, .7), #0000 70%); mix-blend-mode: screen; animation: neon 5s linear infinite; pointer-events: none; filter: opacity(var(--k, 1)); }
+  @keyframes pulse { 0%, 100% { opacity: .35; transform: scale(.96); } 50% { opacity: 1; transform: scale(1.05); } }
+  @keyframes neon { 0%, 100% { opacity: .2; } 8% { opacity: .9; } 10% { opacity: .3; } 12% { opacity: .95; } 55% { opacity: .75; } 57% { opacity: .25; } 60% { opacity: .85; } }
+
+  /* Fumée de la cigarette */
+  .intro__fumee { position: absolute; left: 30.9%; top: 55.4%; width: 0; height: 0; pointer-events: none; }
+  .intro__fumee i { position: absolute; left: 0; top: 0; width: calc(var(--c) * .016); height: calc(var(--c) * .016); margin: calc(var(--c) * -.008); border-radius: 50%; background: rgba(225, 225, 255, .5); filter: blur(calc(var(--c) * .005)); opacity: 0; animation: fumee 5.4s ease-out var(--r, 0s) infinite; }
+  @keyframes fumee { 0% { opacity: 0; transform: translate(0, 0) scale(.3); } 12% { opacity: .75; } 100% { opacity: 0; transform: translate(calc(var(--c) * var(--dx, .02)), calc(var(--c) * -.085)) scale(3.2); } }
+
+  /* Papillon */
+  .intro__cadre > .intro__reflet { position: absolute; left: 44%; top: 74%; width: 11%; height: 17.5%; opacity: 0; }
+  .intro__lueur { position: absolute; left: 49.3%; top: 79.2%; width: 13%; height: 13%; margin: -6.5% 0 0 -6.5%; border-radius: 50%; background: radial-gradient(circle, rgba(120, 190, 255, .8), rgba(60, 110, 255, .25) 40%, #0000 70%); mix-blend-mode: screen; opacity: 0; pointer-events: none; }
+  .papillon { position: absolute; left: 49.3%; top: 78.9%; width: 5%; margin: -2.65% 0 0 -2.5%; aspect-ratio: 600 / 637; perspective: calc(var(--c) * .4); will-change: transform; opacity: 0; filter: drop-shadow(0 0 calc(var(--c) * .006) rgba(120, 190, 255, .9)); }
+  .papillon img { position: absolute; inset: 0; width: 100%; height: 100%; transform-origin: 52.8% 55%; animation: aile-g .26s ease-in-out infinite alternate; }
+  .papillon img + img { animation-name: aile-d; }
+  .papillon.pose img { animation-duration: 2.6s; animation-name: aile-g-pose; }
+  .papillon.pose img + img { animation-name: aile-d-pose; }
+  @keyframes aile-g { from { transform: rotateY(-8deg); } to { transform: rotateY(74deg); } }
+  @keyframes aile-d { from { transform: rotateY(8deg); } to { transform: rotateY(-74deg); } }
+  @keyframes aile-g-pose { 0%, 70% { transform: rotateY(0); } 85% { transform: rotateY(48deg); } 100% { transform: rotateY(0); } }
+  @keyframes aile-d-pose { 0%, 70% { transform: rotateY(0); } 85% { transform: rotateY(-48deg); } 100% { transform: rotateY(0); } }
+
+  /* Titre d'ouverture */
+  .intro__titre { position: absolute; left: 50%; top: 40%; width: min(60vw, 680px); text-align: center; transform: translate(-50%, -50%); z-index: 3; pointer-events: none; will-change: transform, opacity; }
+  .intro__titre img { width: 100%; display: block; filter: drop-shadow(0 0 10px rgba(110, 210, 255, .95)) drop-shadow(0 0 34px rgba(60, 140, 255, .8)); animation: titre 6s ease-in-out infinite; }
+  .intro__titre span { display: block; margin-top: -3.8%; margin-right: -.5em; letter-spacing: .5em; font-size: clamp(10px, 1.1vw, 14px); text-shadow: 0 0 12px rgba(110, 210, 255, .9), 0 1px 10px rgba(0, 0, 0, .6); }
+  @keyframes titre { 0%, 100% { opacity: 1; } 47% { opacity: 1; } 48% { opacity: .72; } 49% { opacity: 1; } 52% { opacity: .8; } 53% { opacity: 1; } }
+
+  .intro__accroche { position: absolute; left: 0; right: 0; bottom: clamp(18px, 5vh, 46px); text-align: center; z-index: 3; }
+  .intro__accroche .petit { display: block; text-shadow: 0 1px 12px rgba(0, 0, 0, .7); }
+  .intro__accroche .petit + .petit { margin-top: 10px; color: var(--doux); }
+  .intro__souris { width: 22px; height: 36px; border: 1px solid rgba(255,255,255,.55); border-radius: 12px; margin: 16px auto 0; position: relative; }
+  .intro__souris::after { content: ""; position: absolute; left: 50%; top: 7px; width: 2px; height: 7px; margin-left: -1px; background: #fff; border-radius: 2px; animation: molette 1.8s infinite; }
+  @keyframes molette { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(12px); opacity: 0; } 100% { opacity: 0; } }
+  .intro__fin { position: absolute; left: 0; right: 0; bottom: clamp(18px, 5vh, 46px); text-align: center; opacity: 0; z-index: 3; }
+  .intro__fin .petit + .petit { display: block; margin-top: 10px; color: var(--doux); }
+
+  /* ---------- Contenu ---------- */
+  .contenu { position: relative; z-index: 5; background: linear-gradient(var(--nuit), var(--nuit-2) 40%, #1a1147 75%, #2a1450); }
+  .bloc { max-width: 1240px; margin: 0 auto; padding: clamp(70px, 12vh, 150px) clamp(16px, 4vw, 44px); }
+  .bloc__sur { color: var(--cyan); margin-bottom: 18px; }
+  .bloc h2 { font-size: clamp(22px, 3.6vw, 44px); line-height: 1.25; }
+
+  .album { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 6vw, 90px); align-items: center; }
+  @media (max-width: 800px) { .album { grid-template-columns: 1fr; } }
+  .album__visuel { position: relative; }
+  .album__visuel img { width: 100%; display: block; border-radius: 6px; box-shadow: 0 30px 90px rgba(60, 40, 180, .55), 0 0 0 1px rgba(255,255,255,.08); }
+  .album p { margin-top: 20px; color: var(--doux); line-height: 1.7; max-width: 46ch; }
+  .bouton { display: inline-block; margin-top: 34px; padding: 16px 30px; border-radius: 999px; border: 1px solid rgba(143, 233, 255, .55); background: rgba(143, 233, 255, .08); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: background .25s, box-shadow .25s; }
+  .bouton:hover { background: rgba(143, 233, 255, .2); box-shadow: 0 0 34px rgba(143, 233, 255, .4); }
+
+  .grille { margin-top: 46px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+  @media (max-width: 1000px) { .grille { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
+  .carte { display: block; border-radius: 18px; padding: 10px 10px 16px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s, box-shadow .35s; }
+  .carte:hover { transform: translateY(-6px); border-color: rgba(143, 233, 255, .5); box-shadow: 0 20px 60px rgba(40, 60, 200, .4); }
+  .carte img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; display: block; background: #fff; }
+  .carte__bas { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 0 4px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+  .carte__bas span:last-child { white-space: nowrap; color: var(--cyan); }
+
+  .pied { text-align: center; padding: 60px 16px 70px; color: var(--doux); }
+
+  /* Apparition au défilement */
+  .reveal { opacity: 0; transform: translateY(34px); filter: blur(6px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1), filter .9s ease; transition-delay: var(--d, 0s); }
+  .reveal.in { opacity: 1; transform: none; filter: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro { height: 100vh; }
+    .intro__scene *, .intro__scene *::before { animation: none !important; }
+    .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+    .intro__souris::after { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="entete petit">
+  <a class="entete__logo" href="#">D.T.F</a>
+  <nav class="entete__menu">
+    <a href="#album">Ataraxie</a>
+    <a href="#boutique">Albums</a>
+    <a href="#boutique">Tee shirts</a>
+    <a href="#boutique">Survêtements</a>
+    <a href="#boutique">Packs</a>
+    <a href="#boutique">Accessoires</a>
+  </nav>
+  <a href="#">Panier (0)</a>
+</header>
+
+<section class="intro" data-intro>
+  <div class="intro__scene">
+    <div class="intro__flou"></div>
+    <div class="intro__cadre" data-cadre>
+      <img src="assets/scene.jpg" alt="Pochette de l'album ATARAXIE de D.T.F">
+      <canvas data-toile aria-hidden="true"></canvas>
+      <div class="intro__halo"></div>
+      <div class="intro__logo" data-logo></div>
+      <div class="intro__fumee"><i style="--r:-0.0s;--dx:0.020"></i><i style="--r:-0.9s;--dx:0.034"></i><i style="--r:-1.8s;--dx:0.012"></i><i style="--r:-2.7s;--dx:0.040"></i><i style="--r:-3.6s;--dx:0.026"></i><i style="--r:-4.5s;--dx:0.016"></i></div>
+      <div class="intro__lueur" data-lueur></div>
+      <div class="papillon" data-papillon><img src="assets/aile_g.webp" alt=""><img src="assets/aile_d.webp" alt=""></div>
+    </div>
+
+    <div class="intro__titre" data-titre><img src="assets/titre.webp" alt="ATARAXIE"><span class="petit">Nouvel album</span></div>
+
+    <div class="intro__accroche" data-accroche>
+      <span class="petit">Scroll pour découvrir</span>
+      <div class="intro__souris" aria-hidden="true"></div>
+    </div>
+    <div class="intro__fin" data-fin>
+      <span class="petit">D.T.F · Nouvel album</span>
+      <span class="petit">Continuer pour entrer dans la boutique</span>
+    </div>
+
+  </div>
+</section>
+
+<main class="contenu">
+  <section class="bloc album" id="album">
+    <div class="album__visuel reveal"><img src="assets/cover.jpg" alt="ATARAXIE" loading="lazy"></div>
+    <div>
+      <p class="petit bloc__sur reveal">Nouvel album</p>
+      <h2 class="titre reveal" style="--d:.08s">Ataraxie</h2>
+      <p class="reveal" style="--d:.16s">[Texte de présentation de l'album, formats disponibles, date de sortie — à compléter.]</p>
+      <a class="bouton petit reveal" style="--d:.24s" href="#">Précommander</a>
+    </div>
+  </section>
+
+  <section class="bloc" id="boutique">
+    <p class="petit bloc__sur reveal">La boutique</p>
+    <h2 class="titre reveal" style="--d:.08s">Collection</h2>
+    <div class="grille">
+      <a class="carte reveal" style="--d:.00s" href="#"><img src="assets/p1.jpg" alt="" loading="lazy"><div class="carte__bas"><span>Tee Shirt Terminator Noir</span><span>39,00 €</span></div></a>
+      <a class="carte reveal" style="--d:.07s" href="#"><img src="assets/p2.jpg" alt="" loading="lazy"><div class="carte__bas"><span>Survêtement Karma Extended</span><span>99,00 €</span></div></a>
+      <a class="carte reveal" style="--d:.14s" href="#"><img src="assets/p3.jpg" alt="" loading="lazy"><div class="carte__bas"><span>Survêtement DTF</span><span>99,00 €</span></div></a>
+      <a class="carte reveal" style="--d:.21s" href="#"><img src="assets/p4.jpg" alt="" loading="lazy"><div class="carte__bas"><span>Bob Réversible DTF</span><span>35,00 €</span></div></a>
+      <a class="carte reveal" style="--d:.00s" href="#"><img src="assets/p5.jpg" alt="" loading="lazy"><div class="carte__bas"><span>Maillot Karma Extended</span><span>39,00 €</span></div></a>
+      <a class="carte reveal" style="--d:.07s" href="#"><img src="assets/p6.jpg" alt="" loading="lazy"><div class="carte__bas"><span>Tee Shirt Classic</span><span>32,00 €</span></div></a>
+      <a class="carte reveal" style="--d:.14s" href="#"><img src="assets/p7.jpg" alt="" loading="lazy"><div class="carte__bas"><span>Pack 4CD DTF</span><span>36,90 €</span></div></a>
+      <a class="carte reveal" style="--d:.21s" href="#"><img src="assets/p8.jpg" alt="" loading="lazy"><div class="carte__bas"><span>CD Dédicacé Karma Extended</span><span>20,00 €</span></div></a>
+    </div>
+  </section>
+
+  <footer class="pied petit">D.T.F · Ataraxie</footer>
+</main>
+
+<script>
+(function () {
+  var q = function (s) { return document.querySelector(s); };
+  var intro = q('[data-intro]'), cadre = q('[data-cadre]');
+  var papillon = q('[data-papillon]'), lueur = q('[data-lueur]');
+  var titre = q('[data-titre]'), accroche = q('[data-accroche]'), fin = q('[data-fin]');
+  var reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var clamp = function (x) { return Math.max(0, Math.min(1, x)); };
+  var plage = function (p, a, b) { var t = clamp((p - a) / (b - a)); return t * t * (3 - 2 * t); };
+
+  // Point d'ancrage du gros plan : le rebord, là où le papillon se pose (en fraction de la pochette).
+  var AX = .493, AY = .805;
+  var c = 0, z0 = 5, tx0 = 0, ty0 = 0;
+  function mesurer() {
+    c = cadre.offsetWidth;
+    var vw = innerWidth, vh = innerHeight;
+    var cibleY = vh * .7;                       // où se trouve le rebord à l'écran au départ
+    var reposY = vh * .47 + (AY - .5) * c;      // où il se trouve quand la pochette est entière
+    tx0 = 0; ty0 = cibleY - reposY;
+    // Zoom de départ : gros plan, et assez grand pour que la pochette couvre tout l'écran.
+    z0 = Math.max(4.6, 1.3 * Math.max(vw / 2 / (Math.min(AX, 1 - AX) * c), cibleY / (AY * c), (vh - cibleY) / ((1 - AY) * c)));
+    lire(); p = -1;
+  }
+
+  var logo = q('[data-logo]'), logoK = 0;
+  var cible = 0, p = -1, relief = 1, refletK = 0, mx = 0, my = 0, sx = 0, sy = 0;
+  function lire() {
+    var r = intro.getBoundingClientRect(), course = r.height - innerHeight;
+    cible = course > 0 ? clamp(-r.top / course) : 0;
+  }
+  function dessiner(v) {
+    // 1. Dézoom : du rebord jusqu'à la pochette entière.
+    var e = plage(v, .5, .9);
+    var z = Math.exp((1 - e) * Math.log(z0));
+    // Relief : au départ la caméra est en hauteur et regarde le rebord en plongée ; elle redescend de face.
+    relief = 1 - plage(v, .08, .86);
+    cadre.style.transform = 'translate(' + (tx0 * (1 - e)).toFixed(2) + 'px,' + (ty0 * (1 - e)).toFixed(2) + 'px) scale(' + z.toFixed(4) + ')';
+    cadre.style.boxShadow = e > .6 ? '' : 'none';
+
+    // 2. Vol du papillon : il arrive du haut à droite, en zigzag, et se pose.
+    var t = plage(v, .05, .46), u = 1 - t;
+    var x = .34 * Math.pow(u, 1.3) + Math.sin(t * Math.PI * 3.2) * .035 * u;
+    var y = -.3 * u * u + Math.sin(t * Math.PI * 4.4 + 1) * .028 * u;
+    var rot = -28 * u + Math.sin(t * Math.PI * 5) * 12 * u;
+    papillon.style.transform = 'translate(' + (x * c).toFixed(2) + 'px,' + (y * c).toFixed(2) + 'px) rotate(' + rot.toFixed(2) + 'deg) scale(' + (1 + u * 1.3).toFixed(3) + ')';
+    papillon.style.opacity = plage(v, .04, .1).toFixed(3);
+    papillon.classList.toggle('pose', t >= .999);
+    var pose = plage(v, .4, .5);
+    lueur.style.opacity = (pose * .9).toFixed(3);
+    refletK = pose;
+    // Le logo D.T.F du sol n'apparaît que lorsque la pochette est entière
+    logoK = plage(v, .86, .95);
+    logo.style.setProperty('--k', logoK.toFixed(3));
+
+    // 3. Textes
+    var s = plage(v, .36, .5);
+    titre.style.opacity = (1 - s).toFixed(3);
+    // Le titre grossit pendant le scroll (sans jamais dépasser la largeur de l'écran)
+    var gros = Math.min(1.75, .92 * innerWidth / (titre.offsetWidth || 1));
+    titre.style.transform = 'translate(-50%,-50%) scale(' + (1 + plage(v, 0, .46) * (gros - 1)).toFixed(4) + ')';
+    accroche.style.opacity = (1 - plage(v, 0, .06)).toFixed(3);
+    fin.style.opacity = plage(v, .88, .96).toFixed(3);
+
+  }
+  function boucle() {
+    var suivante = p < 0 ? cible : p + (cible - p) * .085;
+    if (Math.abs(suivante - cible) < .0003) suivante = cible;
+    if (suivante !== p) { p = suivante; dessiner(p); }
+    requestAnimationFrame(boucle);
+  }
+  if (reduit) {
+    papillon.style.opacity = 1; papillon.classList.add('pose'); lueur.style.opacity = .9;
+    titre.style.display = 'none';
+  } else {
+    addEventListener('scroll', lire, { passive: true });
+    addEventListener('resize', mesurer);
+    addEventListener('pointermove', function (ev) { if (ev.pointerType === 'mouse') { mx = ev.clientX / innerWidth * 2 - 1; my = ev.clientY / innerHeight * 2 - 1; } }, { passive: true });
+    mesurer();
+    boucle();
+  }
+
+  // ---- Eau et nuages animés : l'image est redessinée par un petit shader, guidé par un masque
+  // (rouge = eau, vert = nuages). Les personnages ne sont pas touchés.
+  (function () {
+    var toile = q('[data-toile]');
+    var gl = !reduit && toile.getContext('webgl', { antialias: false, alpha: false });
+    if (!gl) { toile.remove(); return; }
+    var cote = Math.min(2000, gl.getParameter(gl.MAX_TEXTURE_SIZE), innerWidth < 800 ? 1400 : 2000);
+    toile.width = toile.height = cote;
+    gl.viewport(0, 0, cote, cote);
+    var VS = 'attribute vec2 a; varying vec2 vv; void main(){ vv = a * .5 + .5; gl_Position = vec4(a, 0., 1.); }';
+    var FS = [
+      'precision highp float;',
+      'uniform sampler2D uImg, uMasque, uReflet, uSol; uniform float uT, uReflK, uLogoK; uniform vec2 uCam; varying vec2 vv;',
+      'float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+      'float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);',
+      '  return mix(mix(h(i), h(i + vec2(1., 0.)), f.x), mix(h(i + vec2(0., 1.)), h(i + vec2(1., 1.)), f.x), f.y); }',
+      'void main(){',
+      // Relief : chaque point est décalé selon sa profondeur (bleu du masque), autour du plan du rebord
+      '  vec2 v = vv;',
+      '  for (int i = 0; i < 2; i++) v = vv + uCam * (texture2D(uMasque, v).b - .6);',
+      '  vec4 m = texture2D(uMasque, v);',
+      // Eau : une houle calme en perspective. Les vagues naissent à l'horizon (fines, lentes)
+      // et avancent vers le rebord en s'élargissant ; l'image est décalée verticalement, comme un vrai reflet.
+      '  float y = 1. - v.y;',
+      '  float yh = max(y - .628, .004);',
+      '  float z = .06 / yh;',
+      '  vec2 P = vec2((v.x - .5) * z * 6., z * 15.);',
+      '  float h1 = n(vec2(P.x + uT * .04, P.y + uT * .30));',
+      '  float h2 = n(vec2(P.x * 2.3 - uT * .03, P.y * 2.4 + uT * .50) + 5.);',
+      '  float houle = h1 * .65 + h2 * .35 - .5;',
+      '  vec2 uv = v + vec2(houle * .25, -houle) * (.003 + yh * .045) * m.r;',
+      // Nuages : dérive continue (deux passes décalées et fondues) + léger remous
+      '  vec2 qn = v * vec2(5., 9.);',
+      '  vec2 dn = vec2(n(qn + uT * .05), n(qn + 3. - uT * .04)) - .5;',
+      '  uv += dn * .006 * m.g;',
+      '  float p1 = fract(uT / 22.), p2 = fract(uT / 22. + .5);',
+      '  vec2 sens = vec2(.03, 0.) * m.g;',
+      '  vec3 a = texture2D(uImg, uv - sens * (p1 - .5)).rgb;',
+      '  vec3 b = texture2D(uImg, uv - sens * (p2 - .5)).rgb;',
+      '  vec3 c = mix(a, b, abs(p1 * 2. - 1.));',
+      // La pente des vagues accroche un peu la lumière
+      '  c *= 1. + houle * .22 * m.r;',
+      // Reflet du papillon sur le sol (zone de la pochette : x 44-55 %, y 74-91,5 %)
+      '  vec2 r = (vec2(v.x, 1. - v.y) - vec2(.44, .74)) / vec2(.11, .175);',
+      '  if (r.x > 0. && r.x < 1. && r.y > 0. && r.y < 1.) { vec4 k = texture2D(uReflet, vec2(r.x, 1. - r.y)); c = mix(c, k.rgb, k.a * uReflK); }',
+      // Sol sans logo (zone x 43-57 %, y 87,5-96,5 %), tant que le logo n'est pas révélé
+      '  vec2 g = (vec2(v.x, 1. - v.y) - vec2(.43, .875)) / vec2(.14, .09);',
+      '  if (g.x > 0. && g.x < 1. && g.y > 0. && g.y < 1.) { vec4 k = texture2D(uSol, vec2(g.x, 1. - g.y)); c = mix(c, k.rgb, k.a * (1. - uLogoK)); }',
+      '  gl_FragColor = vec4(c, 1.);',
+      '}'].join('\n');
+    function shader(type, src) { var sh = gl.createShader(type); gl.shaderSource(sh, src); gl.compileShader(sh); return sh; }
+    var prog = gl.createProgram();
+    gl.attachShader(prog, shader(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { toile.remove(); return; }
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    function texture(unite, src, format) {
+      return new Promise(function (ok, ko) {
+        var im = new Image();
+        im.onload = function () {
+          gl.activeTexture(gl.TEXTURE0 + unite); gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+          gl.texImage2D(gl.TEXTURE_2D, 0, format || gl.RGB, format || gl.RGB, gl.UNSIGNED_BYTE, im);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          ok();
+        };
+        im.onerror = ko; im.src = src;
+      });
+    }
+    toile.style.opacity = 0;
+    Promise.all([texture(0, 'assets/scene.jpg'), texture(1, 'assets/masque.png'), texture(2, 'assets/reflet.webp', gl.RGBA), texture(3, 'assets/sol.webp', gl.RGBA)]).then(function () {
+      gl.uniform1i(gl.getUniformLocation(prog, 'uImg'), 0); gl.uniform1i(gl.getUniformLocation(prog, 'uMasque'), 1); gl.uniform1i(gl.getUniformLocation(prog, 'uReflet'), 2); gl.uniform1i(gl.getUniformLocation(prog, 'uSol'), 3);
+      var uLogoK = gl.getUniformLocation(prog, 'uLogoK');
+      var uCam = gl.getUniformLocation(prog, 'uCam'), uReflK = gl.getUniformLocation(prog, 'uReflK');
+      var uT = gl.getUniformLocation(prog, 'uT'), visible = true;
+      new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(intro);
+      toile.style.opacity = 1;
+      (function image(t) {
+        sx += (mx - sx) * .05; sy += (my - sy) * .05;
+        if (visible) { gl.uniform1f(uT, t / 1000); gl.uniform1f(uReflK, refletK); gl.uniform1f(uLogoK, logoK); gl.uniform2f(uCam, -sx * .006, relief * .02 + sy * .004); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); }
+        requestAnimationFrame(image);
+      })(0);
+    }).catch(function () { toile.remove(); });
+  })();
+
+  // Apparition des blocs
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+})();
+</script>
+
+</body>
+</html>
