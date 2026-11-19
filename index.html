@@ -221,7 +221,7 @@
     var z = Math.exp((1 - e) * Math.log(z0));
     // Relief : au départ la caméra est en hauteur et regarde le rebord en plongée ; elle redescend de face.
     relief = 1 - plage(v, .08, .86);
-    cadre.style.transform = 'perspective(1500px) translate(' + (tx0 * (1 - e)).toFixed(2) + 'px,' + (ty0 * (1 - e)).toFixed(2) + 'px) rotateX(' + (relief * 24).toFixed(3) + 'deg) scale(' + z.toFixed(4) + ')';
+    cadre.style.transform = 'translate(' + (tx0 * (1 - e)).toFixed(2) + 'px,' + (ty0 * (1 - e)).toFixed(2) + 'px) scale(' + z.toFixed(4) + ')';
     cadre.style.boxShadow = e > .6 ? '' : 'none';
 
     // 2. Vol du papillon : il arrive du haut à droite, en zigzag, et se pose.
