@@ -40,7 +40,7 @@
 
   /* Halo de la planète et du logo */
   .intro__halo { position: absolute; left: 50.3%; top: 44.5%; width: 44%; height: 44%; margin: -22% 0 0 -22%; border-radius: 50%; background: radial-gradient(circle, rgba(170, 190, 255, .34), rgba(255, 150, 220, .12) 45%, #0000 68%); mix-blend-mode: screen; animation: pulse 7s ease-in-out infinite; pointer-events: none; }
-  .intro__logo { position: absolute; left: 50.3%; top: 91.6%; width: 12%; height: 5%; margin: -2.5% 0 0 -6%; border-radius: 50%; background: radial-gradient(ellipse, rgba(255, 90, 130, .7), #0000 70%); mix-blend-mode: screen; animation: neon 5s linear infinite; pointer-events: none; }
+  .intro__logo { position: absolute; left: 50.3%; top: 91.6%; width: 12%; height: 5%; margin: -2.5% 0 0 -6%; border-radius: 50%; background: radial-gradient(ellipse, rgba(255, 90, 130, .7), #0000 70%); mix-blend-mode: screen; animation: neon 5s linear infinite; pointer-events: none; filter: opacity(var(--k, 1)); }
   @keyframes pulse { 0%, 100% { opacity: .35; transform: scale(.96); } 50% { opacity: 1; transform: scale(1.05); } }
   @keyframes neon { 0%, 100% { opacity: .2; } 8% { opacity: .9; } 10% { opacity: .3; } 12% { opacity: .95; } 55% { opacity: .75; } 57% { opacity: .25; } 60% { opacity: .85; } }
 
@@ -135,7 +135,7 @@
       <img src="assets/scene.jpg" alt="Pochette de l'album ATARAXIE de D.T.F">
       <canvas data-toile aria-hidden="true"></canvas>
       <div class="intro__halo"></div>
-      <div class="intro__logo"></div>
+      <div class="intro__logo" data-logo></div>
       <div class="intro__fumee"><i style="--r:-0.0s;--dx:0.020"></i><i style="--r:-0.9s;--dx:0.034"></i><i style="--r:-1.8s;--dx:0.012"></i><i style="--r:-2.7s;--dx:0.040"></i><i style="--r:-3.6s;--dx:0.026"></i><i style="--r:-4.5s;--dx:0.016"></i></div>
       <div class="intro__lueur" data-lueur></div>
       <div class="papillon" data-papillon><img src="assets/aile_g.webp" alt=""><img src="assets/aile_d.webp" alt=""></div>
@@ -209,6 +209,7 @@
     lire(); p = -1;
   }
 
+  var logo = q('[data-logo]'), logoK = 0;
   var cible = 0, p = -1, relief = 1, refletK = 0, mx = 0, my = 0, sx = 0, sy = 0;
   function lire() {
     var r = intro.getBoundingClientRect(), course = r.height - innerHeight;
@@ -234,6 +235,9 @@
     var pose = plage(v, .4, .5);
     lueur.style.opacity = (pose * .9).toFixed(3);
     refletK = pose;
+    // Le logo D.T.F du sol n'apparaît que lorsque la pochette est entière
+    logoK = plage(v, .86, .95);
+    logo.style.setProperty('--k', logoK.toFixed(3));
 
     // 3. Textes
     var s = plage(v, .36, .5);
@@ -274,7 +278,7 @@
     var VS = 'attribute vec2 a; varying vec2 vv; void main(){ vv = a * .5 + .5; gl_Position = vec4(a, 0., 1.); }';
     var FS = [
       'precision highp float;',
-      'uniform sampler2D uImg, uMasque, uReflet; uniform float uT, uReflK; uniform vec2 uCam; varying vec2 vv;',
+      'uniform sampler2D uImg, uMasque, uReflet, uSol; uniform float uT, uReflK, uLogoK; uniform vec2 uCam; varying vec2 vv;',
       'float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
       'float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);',
       '  return mix(mix(h(i), h(i + vec2(1., 0.)), f.x), mix(h(i + vec2(0., 1.)), h(i + vec2(1., 1.)), f.x), f.y); }',
@@ -307,6 +311,9 @@
       // Reflet du papillon sur le sol (zone de la pochette : x 44-55 %, y 74-91,5 %)
       '  vec2 r = (vec2(v.x, 1. - v.y) - vec2(.44, .74)) / vec2(.11, .175);',
       '  if (r.x > 0. && r.x < 1. && r.y > 0. && r.y < 1.) { vec4 k = texture2D(uReflet, vec2(r.x, 1. - r.y)); c = mix(c, k.rgb, k.a * uReflK); }',
+      // Sol sans logo (zone x 43-57 %, y 87,5-96,5 %), tant que le logo n'est pas révélé
+      '  vec2 g = (vec2(v.x, 1. - v.y) - vec2(.43, .875)) / vec2(.14, .09);',
+      '  if (g.x > 0. && g.x < 1. && g.y > 0. && g.y < 1.) { vec4 k = texture2D(uSol, vec2(g.x, 1. - g.y)); c = mix(c, k.rgb, k.a * (1. - uLogoK)); }',
       '  gl_FragColor = vec4(c, 1.);',
       '}'].join('\n');
     function shader(type, src) { var sh = gl.createShader(type); gl.shaderSource(sh, src); gl.compileShader(sh); return sh; }
@@ -332,15 +339,16 @@
       });
     }
     toile.style.opacity = 0;
-    Promise.all([texture(0, 'assets/scene.jpg'), texture(1, 'assets/masque.png'), texture(2, 'assets/reflet.webp', gl.RGBA)]).then(function () {
-      gl.uniform1i(gl.getUniformLocation(prog, 'uImg'), 0); gl.uniform1i(gl.getUniformLocation(prog, 'uMasque'), 1); gl.uniform1i(gl.getUniformLocation(prog, 'uReflet'), 2);
+    Promise.all([texture(0, 'assets/scene.jpg'), texture(1, 'assets/masque.png'), texture(2, 'assets/reflet.webp', gl.RGBA), texture(3, 'assets/sol.webp', gl.RGBA)]).then(function () {
+      gl.uniform1i(gl.getUniformLocation(prog, 'uImg'), 0); gl.uniform1i(gl.getUniformLocation(prog, 'uMasque'), 1); gl.uniform1i(gl.getUniformLocation(prog, 'uReflet'), 2); gl.uniform1i(gl.getUniformLocation(prog, 'uSol'), 3);
+      var uLogoK = gl.getUniformLocation(prog, 'uLogoK');
       var uCam = gl.getUniformLocation(prog, 'uCam'), uReflK = gl.getUniformLocation(prog, 'uReflK');
       var uT = gl.getUniformLocation(prog, 'uT'), visible = true;
       new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(intro);
       toile.style.opacity = 1;
       (function image(t) {
         sx += (mx - sx) * .05; sy += (my - sy) * .05;
-        if (visible) { gl.uniform1f(uT, t / 1000); gl.uniform1f(uReflK, refletK); gl.uniform2f(uCam, -sx * .006, relief * .02 + sy * .004); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); }
+        if (visible) { gl.uniform1f(uT, t / 1000); gl.uniform1f(uReflK, refletK); gl.uniform1f(uLogoK, logoK); gl.uniform2f(uCam, -sx * .006, relief * .02 + sy * .004); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); }
         requestAnimationFrame(image);
       })(0);
     }).catch(function () { toile.remove(); });
