@@ -132,7 +132,7 @@
   <div class="intro__scene">
     <div class="intro__flou"></div>
     <div class="intro__cadre" data-cadre>
-      <img src="assets/scene.jpg" alt="Pochette de l'album ATARAXIE de D.T.F">
+      <img src="assets/scene_avec_logo.jpg" alt="Pochette de l'album ATARAXIE de D.T.F">
       <canvas data-toile aria-hidden="true"></canvas>
       <div class="intro__halo"></div>
       <div class="intro__logo"></div>
@@ -324,7 +324,7 @@
       });
     }
     toile.style.opacity = 0;
-    Promise.all([texture(0, 'assets/scene.jpg'), texture(1, 'assets/masque_v1.png')]).then(function () {
+    Promise.all([texture(0, 'assets/scene_avec_logo.jpg'), texture(1, 'assets/masque_v1.png')]).then(function () {
       gl.uniform1i(gl.getUniformLocation(prog, 'uImg'), 0); gl.uniform1i(gl.getUniformLocation(prog, 'uMasque'), 1);
       var uT = gl.getUniformLocation(prog, 'uT'), visible = true;
       new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(intro);
