@@ -252,6 +252,7 @@
 
   }
   function boucle() {
+    lire();  // relu à chaque image : fonctionne quel que soit l'élément qui défile (fenêtre ou conteneur du thème)
     var suivante = p < 0 ? cible : p + (cible - p) * .085;
     if (Math.abs(suivante - cible) < .0003) suivante = cible;
     if (suivante !== p) { p = suivante; dessiner(p); }
