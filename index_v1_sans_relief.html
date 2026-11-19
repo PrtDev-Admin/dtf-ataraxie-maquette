@@ -283,11 +283,11 @@
       '  float y = 1. - v.y;',
       '  float yh = max(y - .628, .004);',
       '  float z = .06 / yh;',
-      '  vec2 P = vec2((v.x - .5) * z * 6., z * 15.);',
+      '  vec2 P = vec2(v.x * 2.2, z * 15.);',  // vagues droites, parallèles à l'horizon (pas d'éventail)
       '  float h1 = n(vec2(P.x + uT * .04, P.y + uT * .30));',
       '  float h2 = n(vec2(P.x * 2.3 - uT * .03, P.y * 2.4 + uT * .50) + 5.);',
       '  float houle = h1 * .65 + h2 * .35 - .5;',
-      '  vec2 uv = v + vec2(houle * .25, -houle) * (.003 + yh * .045) * m.r;',
+      '  vec2 uv = v + vec2(houle * .25, -houle) * (.0012 + yh * .04) * smoothstep(.0, .03, yh) * m.r;',
       // Nuages : dérive continue (deux passes décalées et fondues) + léger remous
       '  vec2 qn = v * vec2(5., 9.);',
       '  vec2 dn = vec2(n(qn + uT * .05), n(qn + 3. - uT * .04)) - .5;',
